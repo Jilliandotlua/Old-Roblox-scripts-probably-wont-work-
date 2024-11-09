@@ -1,0 +1,261 @@
+local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+local Player = game.Players.LocalPlayer
+local Character = Player.Character
+local Name = Player.Name
+
+getgenv().Noclip = false
+getgenv().cframespeed = false
+
+local Window = OrionLib:MakeWindow({Name = "YeN.lol | "..Player.DisplayName or Name, HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
+
+-- Services
+local TweenService = game:GetService("TweenService")
+
+local Home = Window:MakeTab({
+	Name = "Home",
+	Icon = "rbxassetid://4034483344",
+	PremiumOnly = false
+})
+
+local PlayerSec = Window:MakeTab({
+	Name = "Player",
+	Icon = "rbxassetid://7992557358",
+	PremiumOnly = false
+})
+
+local Main = Window:MakeTab({
+	Name = "Main",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+
+local Settings = Window:MakeTab({
+	Name = "Settings",
+	Icon = "rbxassetid://9753762469",
+	PremiumOnly = false
+})
+
+
+-- Functions
+
+function AutoFarmmCoin()
+pcall(function()
+local CoinsFolder = game.Workspace.Coins.Coins
+	Player.Character.HumanoidRootPart.CFrame = CoinsFolder:FindFirstChild("Coin").HumanoidRootPart.CFrame
+	wait(.1)
+	Player.Character.HumanoidRootPart.CFrame = CFrame.new(-150,20,-112)
+	end)
+end
+
+function AutoFarmmSearch()
+	pcall(function()
+	local folder = game.Workspace.SearchItems
+	for i,v in pairs(folder:GetDescendants()) do
+			if v:IsA("ProximityPrompt") then
+				fireproximityprompt(v)
+			end
+		end
+	end)
+end
+
+function CompleteAllLevels()
+	Character.HumanoidRootPart.CFrame = CFrame.new(-950.088,9,-176.317)
+	wait(1)
+	fireproximityprompt(game.Workspace.KeyModel.ProximityPrompt)
+	Character.Humanoid:EquipTool(Player.Backpack.Key)
+	wait(.1)
+	local folder = game.Workspace.Motion.DoorLocks
+	for i,v in pairs(folder:GetDescendants()) do
+		if v:IsA("ProximityPrompt") then
+			fireproximityprompt(v)
+			wait(OrionLib.Flags["completedelay"].Value)
+			local ClientFolder = game.Workspace.ClientMaps
+			fireproximityprompt(ClientFolder.PoolRooms.NextLevelPart.ProximityPrompt)
+			wait(2)
+			fireproximityprompt(ClientFolder.PlayPlace.NextLevelPart.ProximityPrompt)
+			wait(2)
+			fireproximityprompt(ClientFolder["The BackWoods"].NextLevelPart.ProximityPrompt)
+			wait(2)
+			fireproximityprompt(ClientFolder["Infinite Garden"].NextLevelPart.ProximityPrompt)
+			wait(2)
+			fireproximityprompt(ClientFolder["The Office"].NextLevelPart.ProximityPrompt)
+			wait(2)
+			game:GetService("ReplicatedStorage").Remotes.NewMap:FireServer("Enter", "Room of Doors")
+		end
+	end
+end
+
+game:GetService("RunService").Stepped:connect(function()
+	if getgenv().Noclip == True then
+		Character.Humanoid:SetState(11)
+		wait(.02)
+	end
+end)
+
+-- Home
+
+Home:AddLabel("Hey 👋! This is YeN here. Credits below.")
+
+local Credits = Home:AddSection({
+	Name = "Credits"
+})
+
+Credits:AddParagraph("Credits",[[YeN - Main Developer
+Skumminity - Script Showcaser - https://discord.gg/dytkh6vEnX
+Orion Library - Library used for the script
+]])
+
+-- Player
+local Character = PlayerSec:AddSection({
+	Name = "Character"
+})
+
+Character:AddSlider({
+	Name = "WalkSpeed",
+	Min = 0,
+	Max = 200,
+	Default = 16,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Speed",
+	Callback = function(Value)
+		Player.Character.Humanoid.WalkSpeed = Value
+	end    
+})
+
+Character:AddSlider({
+	Name = "JumpPower",
+	Min = 0,
+	Max = 1000,
+	Default = 50,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 10,
+	ValueName = "Power",
+	Callback = function(Value)
+		Player.Character.Humanoid.JumpPower = Value
+	end    
+})
+
+Character:AddToggle({
+	Name = "Noclip",
+	Default = false,
+	Callback = function(Value)
+		getgenv().Noclip = Value
+	end    
+})
+
+-- Main
+
+local AutoFarm = Main:AddSection({
+	Name = "AutoFarm"
+})
+
+local Complete = Main:AddSection({
+	Name = "Complete"
+})
+
+
+local Other = Main:AddSection({
+	Name = "Other"
+})
+
+AutoFarm:AddToggle({
+	Name = "AutoFarm Coins",
+	Default = false,
+	Flag = "autofarm",
+	Callback = function(Value)
+		if Value == true then
+			repeat wait(OrionLib.Flags["farmdelay"].Value / 10) AutoFarmmCoin() until OrionLib.Flags["autofarm"].Value == false
+			
+		end
+	end
+})
+
+AutoFarm:AddSlider({
+	Name = "Coin AutoFarm Delay",
+	Min = 1,
+	Max = 50,
+	Default = 2,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Example: 1 = .1, 10 = 1",
+	Flag = "farmdelay",
+	Callback = function(Value)
+		
+	end    
+})
+
+AutoFarm:AddToggle({
+	Name = "AutoFarm Searchables",
+	Default = false,
+	Flag = "autofarmsearch",
+	Callback = function(Value)
+		if Value == true then
+			repeat wait(OrionLib.Flags["farmdelaysearch"].Value) AutoFarmmSearch() until OrionLib.Flags["autofarmsearch"].Value == false
+			
+		end
+	end
+})
+
+AutoFarm:AddSlider({
+	Name = "Search AutoFarm Delay",
+	Min = 1,
+	Max = 60,
+	Default = 1,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Seconds",
+	Flag = "farmdelaysearch",
+	Callback = function(Value)
+		
+	end    
+})
+
+Complete:AddButton({
+	Name = "Complete All Levels",
+	Callback = function()
+      	CompleteAllLevels()
+  	end    
+})
+
+Complete:AddSlider({
+	Name = "Search AutoFarm Delay",
+	Min = 1,
+	Max = 50,
+	Default = 4,
+	Color = Color3.fromRGB(255,255,255),
+	Increment = 1,
+	ValueName = "Example: 1 = .1 , 10 = 1",
+	Flag = "completedelay",
+	Callback = function(Value)
+		
+	end    
+})
+
+Other:AddButton({
+	Name = "Delete All Stains",
+	Callback = function()
+      	for i,v in pairs(game.Workspace.Stains:GetChildren()) do
+      		v:Destroy()
+      	end
+  	end    
+})
+
+
+
+local Debug = Settings:AddSection({
+	Name = "Debug"
+})
+
+Debug:AddToggle({
+	Name = "Show Data",
+	Default = false,
+	Callback = function(Value)
+		if Value == true then
+			
+		end
+	end    
+})
+
+OrionLib:Init()
