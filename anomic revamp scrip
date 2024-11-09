@@ -1,0 +1,627 @@
+-- Get stuff --
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jilliandotlua/loadstrings/refs/heads/main/librarycatto"))()
+Library.theme.accentcolor = Color3.new(0.603921, 0.011764, 1)
+local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jilliandotlua/loadstrings/refs/heads/main/luaesp"))()
+--shits broke :C local NotifyLibrary = loadstring(game:HttpGet("https://raw.githubusercontent.com/Firoxus/-/main/akalinotif"))()
+--local Notify = NotifyLibrary.Notify
+local user = game.Players.LocalPlayer.DisplayName or game.Players.LocalPlayer.Name
+
+
+
+-- Start --
+local Window = Library:CreateWindow("YeN.lol | " ..user, Vector2.new(500, 600), Enum.KeyCode.RightControl)
+local MiscTab = Window:CreateTab("Main")
+local Aim = Window:CreateTab("Aiming")
+local VisualsTab = Window:CreateTab("Visuals")
+local Settings = Window:CreateTab("Settings")
+
+
+
+
+local AntiAim = Aim:CreateSector("AntiAim", "left")
+local Silentaim = Aim:CreateSector("Silentaim", "right")
+local Visuals = VisualsTab:CreateSector("Esp", "left")
+local Lighting = VisualsTab:CreateSector("Lighting", "right")
+
+local Misc8 = MiscTab:CreateSector("Credits", "left")
+local Misc2 = MiscTab:CreateSector("Character", "right")
+local Misc1 = MiscTab:CreateSector("Other stuff", "left")
+local Misc5 = MiscTab:CreateSector("Character exploits", "right")
+local Misc3 = MiscTab:CreateSector("Teleports", "right")
+local Misc6 = MiscTab:CreateSector("Remotes", "left")
+local Misc7 = MiscTab:CreateSector("Game", "right")
+
+
+
+
+getgenv().sped = false
+getgenv().AntiAim2 = false
+getgenv().jitter = false
+getgenv().cframe = false
+
+local Jit = math.random(30, 90)
+local Angle = 60
+local speedvalue = 0.30
+game:GetService("RunService").Heartbeat:Connect(
+    function()
+
+wait(.2)
+        if sped then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(555), 0)
+        end
+        if AntiAim2 then
+
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.new(0, 0.999, 0)
+            wait(0.2)
+        end
+
+        if jitter then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position) *
+            CFrame.Angles(0, math.rad(Angle) + math.rad((math.random(1, 2) == 1 and Jit or -Jit)), 0)
+        end
+        if cframe then
+            for _, v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+                if v:IsA("Script") and v.Name ~= "Health" and v.Name ~= "Sound" and v:FindFirstChild("LocalScript") then
+                    v:Destroy()
+                end
+            end
+            game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
+                repeat
+                    wait()
+                until game.Players.LocalPlayer.Character
+                char.ChildAdded:Connect(function(child)
+                    if child:IsA("Script") then 
+                        wait(0.1)
+                        if child:FindFirstChild("LocalScript") then
+                            child.LocalScript:FireServer()
+                        end
+                    end
+                end)
+            end)
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame +
+            game.Players.LocalPlayer.Character.Humanoid.MoveDirection * speedvalue
+            end
+            if BlatantAA then
+                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity =
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.lookVector * -250
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame * CFrame.Angles(0, math.rad(555), 0)
+                end
+    end)
+    
+Misc8:AddLabel([[
+YeN - Most of the script
+Firox - Some Crucial Parts
+Skumminity - Showcase
+]], nil, function(State)
+
+end)
+
+Misc2:AddToggle("Noclip", false, function(z)
+    	if z == true then
+			Stepped = game:GetService("RunService").Stepped:Connect(function()
+				for i,v in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if v:IsA("BasePart") then
+						v.CanCollide = false
+					end
+				end
+			end)
+	
+			else
+			Stepped:Disconnect()
+				for e,a in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if a:IsA("BasePart") then
+						a.CanCollide = true
+					end
+				end
+			end
+end)
+    
+-- visuals start
+
+
+
+
+Visuals:AddToggle("Esp", false, function(t)
+ESP:Toggle(t)
+end)
+
+Misc2:AddSlider("Fov", 0, 70, 120, 1, function(State)
+    game:GetService'Workspace'.Camera.FieldOfView = State
+end)
+
+Visuals:AddToggle("Boxes", false, function(t)
+ESP.Boxes = t
+end)
+
+Visuals:AddToggle("Names", false, function(t)
+ESP.Names = t
+end)
+
+Visuals:AddToggle("Tracers", false, function(t)
+ESP.Tracers = t
+end)
+
+Visuals:AddToggle("Show Sherrif/Swat", false, function(t)
+ESP:AddObjectListener(workspace.NPCs, {
+    Color =  Color3.new(255,0,0),
+    Type = "Model",
+    PrimaryPart = function(obj)
+        local hrp = obj:FindFirstChildWhichIsA("BasePart")
+        while not hrp do
+            wait()
+            hrp = obj:FindFirstChildWhichIsA("BasePart")
+        end
+        return hrp
+    end,
+    Validator = function(obj)
+        return not game.Players:GetPlayerFromCharacter(obj)
+    end,
+    CustomName = function(obj)
+        return obj:FindFirstChild("Zombie") and obj.Zombie.Value or obj.Name
+    end,
+    IsEnabled = "NPCs",
+})
+
+ESP.NPCs = t
+end)
+
+Lighting:AddButton("Full bright", function(IhateGayPeople)
+if not _G.FullBrightExecuted then
+
+	_G.FullBrightEnabled = false
+
+	_G.NormalLightingSettings = {
+		Brightness = game:GetService("Lighting").Brightness,
+		ClockTime = game:GetService("Lighting").ClockTime,
+		FogEnd = game:GetService("Lighting").FogEnd,
+		GlobalShadows = game:GetService("Lighting").GlobalShadows,
+		Ambient = game:GetService("Lighting").Ambient
+	}
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("Brightness"):Connect(function()
+		if game:GetService("Lighting").Brightness ~= 1 and game:GetService("Lighting").Brightness ~= _G.NormalLightingSettings.Brightness then
+			_G.NormalLightingSettings.Brightness = game:GetService("Lighting").Brightness
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").Brightness = 1
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("ClockTime"):Connect(function()
+		if game:GetService("Lighting").ClockTime ~= 12 and game:GetService("Lighting").ClockTime ~= _G.NormalLightingSettings.ClockTime then
+			_G.NormalLightingSettings.ClockTime = game:GetService("Lighting").ClockTime
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").ClockTime = 12
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("FogEnd"):Connect(function()
+		if game:GetService("Lighting").FogEnd ~= 786543 and game:GetService("Lighting").FogEnd ~= _G.NormalLightingSettings.FogEnd then
+			_G.NormalLightingSettings.FogEnd = game:GetService("Lighting").FogEnd
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").FogEnd = 786543
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("GlobalShadows"):Connect(function()
+		if game:GetService("Lighting").GlobalShadows ~= false and game:GetService("Lighting").GlobalShadows ~= _G.NormalLightingSettings.GlobalShadows then
+			_G.NormalLightingSettings.GlobalShadows = game:GetService("Lighting").GlobalShadows
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").GlobalShadows = false
+		end
+	end)
+
+	game:GetService("Lighting"):GetPropertyChangedSignal("Ambient"):Connect(function()
+		if game:GetService("Lighting").Ambient ~= Color3.fromRGB(178, 178, 178) and game:GetService("Lighting").Ambient ~= _G.NormalLightingSettings.Ambient then
+			_G.NormalLightingSettings.Ambient = game:GetService("Lighting").Ambient
+			if not _G.FullBrightEnabled then
+				repeat
+					wait()
+				until _G.FullBrightEnabled
+			end
+			game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+		end
+	end)
+
+	game:GetService("Lighting").Brightness = 1
+	game:GetService("Lighting").ClockTime = 12
+	game:GetService("Lighting").FogEnd = 786543
+	game:GetService("Lighting").GlobalShadows = false
+	game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+
+	local LatestValue = true
+	spawn(function()
+		repeat
+			wait()
+		until _G.FullBrightEnabled
+		while wait() do
+			if _G.FullBrightEnabled ~= LatestValue then
+				if not _G.FullBrightEnabled then
+					game:GetService("Lighting").Brightness = _G.NormalLightingSettings.Brightness
+					game:GetService("Lighting").ClockTime = _G.NormalLightingSettings.ClockTime
+					game:GetService("Lighting").FogEnd = _G.NormalLightingSettings.FogEnd
+					game:GetService("Lighting").GlobalShadows = _G.NormalLightingSettings.GlobalShadows
+					game:GetService("Lighting").Ambient = _G.NormalLightingSettings.Ambient
+				else
+					game:GetService("Lighting").Brightness = 1
+					game:GetService("Lighting").ClockTime = 12
+					game:GetService("Lighting").FogEnd = 786543
+					game:GetService("Lighting").GlobalShadows = false
+					game:GetService("Lighting").Ambient = Color3.fromRGB(178, 178, 178)
+				end
+				LatestValue = not LatestValue
+			end
+		end
+	end)
+end
+
+_G.FullBrightExecuted = true
+_G.FullBrightEnabled = not _G.FullBrightEnabled
+end)
+
+
+
+-- visuals end --
+
+-- misc start --
+
+Misc1:AddButton("Destroy trespassing zones", function(IhateGayPeople)
+    		for i,v in pairs(game.Workspace.TrespassingAreas:GetChildren()) do
+			v:Destroy()
+		end
+end)
+
+Misc2:AddToggle("Cframe walkspeed", false, function(t)
+    getgenv().cframe = t
+end)
+
+Misc5:AddToggle("Anti ragdoll (no falldmg)", false, function(t)
+game:GetService("ReplicatedStorage").Events.Ragdoll:Destroy()
+end)
+
+Misc3:AddButton("Safe Zone", function(IhateGayPeople)
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(1259.6763916015625, -10.356278419494629, 4900.2158203125)}):Play()
+end)
+
+Misc3:AddButton("Hideout", function(IhateGayPeople)
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-252.15, 7.1, 1030.1)}):Play()
+end)
+Misc3:AddButton("Swat", function(IhateGayPeople)
+tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(2950.6650390625, 112.59706115722656, 2858.60107421875)}):Play()
+end)
+
+Misc3:AddButton("Police department", function(IhateGayPeople)
+  tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(2235.488037109375, 119.46002197265625, 2457.19384765625)}):Play()  
+end)
+
+Misc3:AddButton("Gas station", function(IhateGayPeople)
+    tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-784.4716796875, 3.0359485149383545, 3078.675048828125)}):Play()
+end)
+
+Misc3:AddButton("Gas station #2", function(IhateGayPeople)
+    tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(2543.825927734375, 113.217041015625, 2687.437255859375)}):Play()
+end)
+
+Misc3:AddButton("Millitary base entrance", function(IhateGayPeople)
+   tweenService, tweenInfo = game:GetService("TweenService"), TweenInfo.new(3, Enum.EasingStyle.Linear)
+tweenService:Create(game:GetService("Players")["LocalPlayer"].Character.HumanoidRootPart, tweenInfo, {CFrame = CFrame.new(-712.7791137695312, 7.1212158203125, 955.865478515625)}):Play() 
+end)
+
+
+Misc1:AddButton("TrashTalk [J]", function(IhateGayPeople)
+local plr = game.Players.LocalPlayer
+repeat wait() until plr.Character
+local char = plr.Character
+
+local garbage = {
+    "YeN.lol > you";
+    "Get good get YeN.lol";
+    "Missing against YeN.lol? 🥺";
+    "Feel the gamesense | YeN.lol";
+    "Can't beat YeN.lol user? L";
+    "Keep Loosing Non YeN.lol user L";
+    
+}
+
+function TrashTalk(inputObject, gameProcessedEvent)
+	wait(.1)
+    if inputObject.KeyCode == Enum.KeyCode.J and gameProcessedEvent == false then        
+game.ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(
+        garbage[math.random(1,#garbage)],
+        "All"
+    )
+    end
+end
+ 
+game:GetService("UserInputService").InputBegan:connect(TrashTalk)
+	
+end)
+
+Misc1:AddButton("Rejoin", function(IhateGayPeople)
+         	game:GetService("TeleportService"):Teleport(game.PlaceId, game:GetService("Players").LocalPlayer)
+end)
+
+Misc1:AddButton("Boost fps", function(IhateGayPeople)
+		for i,v in pairs(game.Workspace:GetDescendants()) do
+			if v:IsA("Part") or v:IsA("MeshPart") or v:IsA("Union") or v:IsA("Union Operative") then
+				v.Material = Enum.Material.SmoothPlastic
+			end
+		end
+end)
+
+-- misc end
+
+-- silent start
+        Silentaim:AddToggle("Silentaim (Buggy)", false, function(t)
+_G.Enabled = t
+_G.NPCAttackEnabled = true
+local maxDistance = 25
+-- // Vars
+local Players = game:GetService("Players")
+local function getplayer()
+local nearestPlayer, nearestDistance
+    for _, player in pairs(Players:GetPlayers()) do
+        if player.Name ~= game.Players.LocalPlayer.Name then
+            local character = player.Character
+            local distance = player:DistanceFromCharacter(game.Players.LocalPlayer.Character.HumanoidRootPart.Position)
+            if not character or 
+                distance > maxDistance or
+                (nearestDistance and distance >= nearestDistance)
+            then
+                continue
+            end
+            nearestDistance = distance
+            nearestPlayer = player
+        end
+    end
+    return nearestPlayer
+end   
+local function getnpc()
+    for i,v in pairs(workspace.NPCs:GetChildren()) do
+        local dist = (v.HumanoidRootPart.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).magnitude
+        if magnitude <= maxDistance then
+            if v.Humanoid.Health > 0 then
+                print(v.Name)
+                return v
+            end    
+        end    
+    end
+end    
+local function isvisible(A)
+    local rayOrigin = game.Players.LocalPlayer.Character.HumanoidRootPart.Position
+    local rayDestination = A.Position
+    local rayDirection = rayDestination - rayOrigin
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {script.Parent}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    raycastParams.IgnoreWater = true
+    local raycastResult = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+    if raycastResult then
+        local hit = raycastResult.Instance
+        if workspace.NPCs:FindFirstChild(hit.Parent.Name) or game.Players:FindFirstChild(hit.Parent.Name) then
+            return true
+        else
+            return false
+        end    
+    end    
+end    
+local players = game.GetService(game, "Players")
+local guiservice = game.GetService(game, "GuiService")
+local runservice = game.GetService(game, "RunService")
+local renderstepped = runservice.RenderStepped
+local localPlayer = players.LocalPlayer
+local currentCamera = game.GetService(game, "Workspace").CurrentCamera
+local Mouse = localPlayer.GetMouse(localPlayer)
+local mt1 = getrawmetatable(game)
+local backupindex = mt1.__index
+local oldIndex = nil 
+oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, Index)
+    if self == Mouse and not checkcaller() and _G.Enabled == true and getplayer() and isvisible(getplayer().Character.HumanoidRootPart) then
+        local HitPart = getplayer().Character.Head
+        if Index == "Target" or Index == "target" then 
+            return HitPart
+        elseif Index == "Hit" or Index == "hit" then 
+            return HitPart.CFrame
+        elseif Index == "X" or Index == "x" then 
+            return self.X 
+        elseif Index == "Y" or Index == "y" then 
+            return self.Y 
+        elseif Index == "UnitRay" then 
+            return Ray.new(self.Origin, (self.Hit - self.Origin).Unit)
+        end
+    elseif self == Mouse and not checkcaller() and _G.Enabled == true and not getplayer() and _G.NPCAttackEnabled == true then
+        if getnpc() and isvisible(getnpc().HumanoidRootPart) then
+            local HitPart = getplayer().Character.Head
+        if Index == "Target" or Index == "target" then 
+            return HitPart
+        elseif Index == "Hit" or Index == "hit" then
+            return HitPart.CFrame
+        elseif Index == "X" or Index == "x" then 
+            return self.X 
+        elseif Index == "Y" or Index == "y" then
+            return self.Y 
+        elseif Index == "UnitRay" then 
+            return Ray.new(self.Origin, (self.Hit - self.Origin).Unit)
+        end
+        end    
+    end
+    return oldIndex(self, Index)
+end))
+        end)
+        
+        Silentaim:AddToggle("Attack npcs (beta)", false, function(t)
+_G.NPCAttackEnabled = t
+end)
+
+Silentaim:AddToggle("Wallcheck", true, function(t)
+	
+end)
+
+
+Silentaim:AddSlider("Max distance", 0, 100, 1000, 1, function(State)
+    maxDistance = State
+end)
+
+
+        -- silent end
+
+
+-- anti start --
+AntiAim:AddToggle("Spinbot AA", false, function(t)
+    getgenv().sped = t
+end)
+
+    AntiAim:AddToggle("Jitter AA", false, function(t)
+        getgenv().jitter = t
+        end)
+
+        AntiAim:AddToggle("Slingshot AA", false, function(t)
+            getgenv().AntiAim2 = t
+        end)
+
+Misc6:AddDropdown("Buy Guns MUST BE ON GUNSMITH", {"Nothing","Grease Gun", "Lever Rifle", "Pocket Pistol", "Pistol", "Navy Revolver", "Sawn Off", "Cleaver", "Snubnose","Classic Shotgun", "Lockpick", "Classic Pistol", "Revolver"}, "Nothing", false, function(dropdown)
+	if dropdown == "Nothing" then
+		
+		
+		elseif dropdown == "Grease Gun" then
+			local Table2 = {
+				["ItemName"] = "Grease Gun"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table2)
+		elseif dropdown == "Lever Rifle" then
+			local Table3 = {
+				["ItemName"] = "Lever Rifle"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table3)
+		elseif dropdown == "Pocket Pistol" then
+			local Table4 = {
+				["ItemName"] = "Pocket Pistol"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table4)
+		elseif dropdown == "Pistol" then
+			local Table5 = {
+				["ItemName"] = "Pistol"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table5)
+		elseif dropdown == "Navy Revolver" then
+			local Table6 = {
+				["ItemName"] = "Navy Revolver"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table6)
+		elseif dropdown == "Sawn Off" then
+			local Table7 = {
+				["ItemName"] = "Sawn Off"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table7)
+		elseif dropdown == "Cleaver" then
+			local Table8 = {
+				["ItemName"] = "Cleaver"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table8)
+		elseif dropdown == "Classic Shotgun" then
+			local Table9 = {
+				["ItemName"] = "Classic Shotgun"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table9)
+		elseif dropdown == "Lockpick" then
+			local Table10 = {
+				["ItemName"] = "Lockpick"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table10)
+		elseif dropdown == "Classic Pistol" then
+			local Table11 = {
+				["ItemName"] = "Classic Pistol"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table11)
+		elseif dropdown == "Revolver" then
+			local Table12 = {
+				["ItemName"] = "Revolver"
+			}
+			game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table12)
+			else
+			
+		end
+end)
+
+Misc6:AddDropdown("Buy Ammo", {"Nothing","7.62", ".50", ".45 ACP", "5.7x28", ".380", ".44 Mag", "9mm", "5.56","12 Gauge"}, "Nothing", false, function(dropdown)
+	if dropdown == "Nothing" then
+		
+	elseif dropdown == "7.62" then
+		local Table5 = {
+		["ItemName"] = "7.62"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table5)
+		
+		elseif dropdown == ".50" then
+			local Table6 = {
+		["ItemName"] = ".50"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table6)
+		elseif dropdown == ".45 ACP" then
+			local Table7 = {
+		["ItemName"] = ".45 ACP"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table7)
+		elseif dropdown == "5.7x28" then
+			local Table8 = {
+		["ItemName"] = "5.7x28"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table8)
+		elseif dropdown == ".380" then
+				local Table9 = {
+		["ItemName"] = ".380"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table9)
+		elseif dropdown == ".44 Mag" then
+				local Table10 = {
+		["ItemName"] = ".44 Mag"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table10)	
+		elseif dropdown == "9mm" then
+					local Table11 = {
+		["ItemName"] = "9mm"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table11)
+		elseif dropdown == "5.56" then
+					local Table12 = {
+		["ItemName"] = "5.56"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table12)	
+		elseif dropdown == "12 Gauge" then
+					local Table13 = {
+		["ItemName"] = "12 Gauge"
+			}
+		game:GetService("ReplicatedStorage").Events.PurchaseItem:FireServer("PurchaseItem", Table13)	
+	end
+end)
+
+Misc7:AddSlider("Set FPS Cap", 15, 60, 360, 1, function(State)
+   setfpscap(State)
+end)
+
