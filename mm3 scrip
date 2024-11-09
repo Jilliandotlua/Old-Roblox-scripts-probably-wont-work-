@@ -1,0 +1,766 @@
+--[[
+	Murder Mystery 3 Script
+	
+	Created by: [-] and Firox	
+	
+	will probably not update this as there is no good explorer :/ (if you're able to edit some things to fix future updates then count this script as yours)
+--]]
+
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+-- variebelss
+wait(1)
+
+
+getgenv().IsAutoBuyingMult = false
+getgenv().Crate1 = ""
+getgenv().Crate2 = ""
+getgenv().Crate3 = ""
+getgenv().Crate4 = ""
+getgenv().MultiCaseCooldown = .1
+getgenv().MultiEventCrates = false
+getgenv().MultiGemCrates = false
+
+getgenv().IsAutoFarmChest = false
+
+getgenv().IsAutoBuying = false
+getgenv().CurrentCaseBuy = ""
+getgenv().CurrentCaseBuyType = ""
+getgenv().EventCrates = false
+getgenv().GemCrates = false
+getgenv().AutoCaseCooldown = .1
+getgenv().CratesOpened = 0
+getgenv().IsAutoFarmCoin = false
+getgenv().AutoFarmCoinCooldown = .2
+Player = game.Players.LocalPlayer
+getgenv().cframe = false
+getgenv().sped = false
+speedvalue = 0.30
+Jit = math.random(30, 90)
+
+_G.usersettings = {
+	--CratesOpened = _G.CratesOpened
+}
+
+settingsfilename = 'mm3_settings.txt'
+
+-- Main UI
+
+local Window = Rayfield:CreateWindow({
+	Name = "YeN.lol | "..Player.DisplayName or Player.Name,
+	LoadingTitle = "YeN.lol",
+	LoadingSubtitle = "by YeN",
+	ConfigurationSaving = {
+		Enabled = true,
+		FolderName = "Rayfield Interface Suite",
+		FileName = "Big Hub"
+	},
+	KeySystem = true,
+	KeySettings = {
+		Title = "YeN.lol",
+		Subtitle = "Sirius' Key System",
+		Note = "W RoSploits discord.gg/dbcuEA6UvX",
+		SaveKey = false,
+		Key = "UG3HBN6UHTG945Y7G6W34"
+	}
+})
+
+Rayfield:LoadConfiguration()
+Rayfield:Notify("Thanks for using YeN.lol, "..Player.DisplayName or Player.Name, "Much love - YeN.", 4483362458)
+
+local Credits = Window:CreateTab("Home", 4483362458)
+local Player = Window:CreateTab("Player", 4483362458)
+local AutoFarm = Window:CreateTab("AutoFarm", 4483362458)
+local Gamee = Window:CreateTab("Game", 4483362458)
+local Debugging = Window:CreateTab("Debugging", 4483362458)
+local Settings = Window:CreateTab("Settings", 4483362458)
+
+-- Main Server Functions
+
+local function AutoFarmCrate()
+	for o,p in pairs(game.ReplicatedStorage.ShopEntries:GetDescendants()) do
+		
+		if p.Name == getgenv().CurrentCaseBuy then
+			local Case = game:GetService("ReplicatedStorage").ShopEntries[p.Parent.Name][getgenv().CurrentCaseBuy]
+		
+			game:GetService("ReplicatedStorage").Interactions.Server.BuyShopItem:InvokeServer(tostring(Case),p.Parent.Name)
+			getgenv().CratesOpened +=1
+		end
+	end
+end
+
+local function MultiCrate()
+pcall(function()
+--	if getgenv().MultiEventCrates == true then
+		
+		
+--	else
+	
+--end
+
+
+	for i,v in pairs(game.ReplicatedStorage.ShopEntries:GetDescendants()) do
+		if v.Name == getgenv().Crate1 then
+			local Case1 = game:GetService("ReplicatedStorage").ShopEntries[v.Parent.Name][getgenv().Crate1]
+
+			game:GetService("ReplicatedStorage").Interactions.Server.BuyShopItem:InvokeServer(tostring(Case1),v.Parent.Name)
+			getgenv().CratesOpened +=1
+			for c,d in pairs(game.ReplicatedStorage.ShopEntries:GetDescendants()) do
+				if d.Name == getgenv().Crate2 then
+					local Case2 = game:GetService("ReplicatedStorage").ShopEntries[d.Parent.Name][getgenv().Crate2]
+
+					game:GetService("ReplicatedStorage").Interactions.Server.BuyShopItem:InvokeServer(tostring(Case2),d.Parent.Name)
+					getgenv().CratesOpened +=1
+					for e,f in pairs(game.ReplicatedStorage.ShopEntries:GetDescendants()) do
+						if f.Name == getgenv().Crate3 then
+							local Case3 = game:GetService("ReplicatedStorage").ShopEntries[f.Parent.Name][getgenv().Crate3]
+
+							game:GetService("ReplicatedStorage").Interactions.Server.BuyShopItem:InvokeServer(tostring(Case3),f.Parent.Name)
+							getgenv().CratesOpened +=1
+							for g,h in pairs(game.ReplicatedStorage.ShopEntries:GetDescendants()) do
+								if h.Name == getgenv().Crate4 then
+									local Case4 = game:GetService("ReplicatedStorage").ShopEntries[h.Parent.Name][getgenv().Crate4]
+
+									game:GetService("ReplicatedStorage").Interactions.Server.BuyShopItem:InvokeServer(tostring(Case4),h.Parent.Name)
+									getgenv().CratesOpened +=1
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+end
+
+local function AutoFarmCoins()
+	pcall(function()
+		local Head = game.Players.LocalPlayer.Character.Head
+
+		for i,v in pairs(game.Workspace.CoinsFolder:GetChildren()) do
+			if v then
+				firetouchinterest(Head, v, 0)
+				wait(getgenv().AutoFarmCoinCooldown)
+				firetouchinterest(Head, v, 1)
+			else
+				
+			end
+		end
+	end)
+end
+
+game:GetService("RunService").Heartbeat:Connect(function()
+wait(.05)
+	if getgenv().IsAutoFarmCoin == true then
+		pcall(function()
+	local coins = game.Workspace.CoinsFolder:GetChildren()
+	for count = #coins,0,-1 do
+		firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, coins[count], 0)
+		wait(getgenv().AutoFarmCoinCooldown)
+		firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, coins[count], 1)
+	end
+end)
+else
+
+	end
+end)
+
+-- not finished
+function saveSettings()
+	print("Saving Settings")
+	local json
+	if (writefile) then
+		local HttpService = game:GetService("HttpService")
+		json = HttpService:JSONEncode(_G.usersettings)
+	else
+		print("YOUR EXECUTOR DOES NOT SUPPORT SAVING SETTINGS")
+	end
+
+end
+
+function loadSettings()
+
+end
+
+local function PanicDestroy()
+	_G.IsAutoBuying = false
+	getgenv().cframe = false
+	getgenv().sped = false
+	for i,v in pairs(game.Players:GetChildren()) do
+		if v.Character:FindFirstChild("Highlight") then
+			v.Character:FindFirstChild("Highlight"):Destory()
+			Rayfield:Destroy()
+		end
+	end
+
+end
+
+local function fullbright()
+	game.Lighting.FogEnd = 999999
+	game.Lighting.GlobalShadows = false
+	game.Lighting.Brightness = 2.2
+	game.Lighting.FogStart = 99999999
+	game.Lighting.ClockTime = 14
+end
+
+local function antiafk()
+	pcall(function()
+		keypress("0x4D")
+		keypress("0x4E")
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(65.78,-35,163.76)
+	end)
+end
+
+local function findmurderer()
+	pcall(function()
+		local players = game.Players:GetChildren()
+		for count = #players,0,-1 do
+		local currentplayer = players[count]
+				
+		local knife = currentplayer.Backpack.Knife or currentplayer.Character.Knife or nil
+		local revolver = currentplayer.Backpack.Revolver or currentplayer.Character.Revolver or nil	
+			if knife then
+				local esp1 = Instance.new("Highlight")
+				esp1.Parent = currentplayer.Character
+			elseif revolver then
+				local esp2 = Instance.new("Highlight")
+				esp2.FillColor = Color3.new(1,1,0)
+				esp2.Parent = currentplayer.Character
+			else
+				local esp2 = Instance.new("Highlight")
+				es2.FillColor = Color3.new(1,1,1)
+				esp2.Parent = currentplayer.Character
+			end
+		end
+	end)
+end
+
+local function findsheriff()
+	pcall(function()
+		for i,v in pairs(game.Players:GetChildren()) do
+			if v.Backpack.Revolver or v.Character.Revolver then
+				local esp = Instance.new("Highlight")
+				esp.FillColor = Color3.new(1,1,0)
+				esp.Parent = v.Character
+			end
+		end
+	end)
+end
+
+game:GetService("RunService").Heartbeat:Connect(function()
+	if sped then
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame =
+			game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame +
+			game.Players.LocalPlayer.Character.Humanoid.MoveDirection * speedvalue
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame.Position) * CFrame.Angles(0, math.rad(Angle) + math.rad((math.random(1, 2) == 1 and Jit or -Jit)), 0)
+	end
+
+end)
+
+game:GetService("RunService").Heartbeat:Connect(function()
+	wait(5)
+	if getgenv().IsAutoFarmChest == true then
+		firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, game.Workspace.ObbySetup.Chest, 0)
+		wait(.1)
+		firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, game.Workspace.ObbySetup.Chest, 1)
+		else
+		
+	end
+end)
+
+-- Button/Functions etc
+
+local CreditLabel = Credits:CreateLabel("Developers:")
+local Credit1 = Credits:CreateLabel("Aiden - Auto Farm and most of the script.  -  N/A")
+local Credit2 = Credits:CreateLabel("Firox - CFrame WalkSpeed  -  Firox#7377")
+local Info1 = Credits:CreateLabel("🚧 = Work In Progress")
+
+--🚧
+
+
+local WalkSpeed = Player:CreateToggle({
+	Name = "CFrame Walkspeed",
+	CurrentValue = false,
+	Flag = "Toggle1",
+	Callback = function(Value)
+		getgenv().cframe = Value
+		getgenv().sped = Value
+	end,
+})
+
+
+local WalkSpeedSpeed = Player:CreateSlider({
+	Name = "CFrame WalkSpeed Speed",
+	Range = {1, 20},
+	Increment = 1,
+	Suffix = "Speed",
+	CurrentValue = 10,
+	Flag = "Slider1",
+	Callback = function(Value)
+		speedvalue = Value / 10
+	end,
+})
+
+local JumpPower = Player:CreateSlider({
+	Name = "Jump Power",
+	Range = {50, 200},
+	Increment = 5,
+	Suffix = "Power",
+	CurrentValue = 50,
+	Flag = "Slider1",
+	Callback = function(Value)
+		game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value
+	end,
+})
+
+
+local Noclip = Player:CreateToggle({
+	Name = "Noclip",
+	CurrentValue = false,
+	Flag = "Toggle1",
+	Callback = function(Value)
+	pcall(function()
+		if Value == true then
+			Stepped = game:GetService("RunService").Stepped:Connect(function()
+					for a, b in pairs(Workspace:GetChildren()) do
+						if b.Name == game.Players.LocalPlayer.Name then
+							for i, o in pairs(Workspace[game.Players.LocalPlayer.Name]:GetChildren()) do
+								if o:IsA("BasePart") then
+									o.CanCollide = false
+								end end end end
+					
+			end)
+	
+			else
+			Stepped:Disconnect()
+				for e,a in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
+					if a:IsA("BasePart") then
+						a.CanCollide = true
+					end
+				end
+			end
+		end)
+	end,
+})
+
+local Crates = AutoFarm:CreateSection("Crates")
+
+local AutoOpenCrates = AutoFarm:CreateToggle({
+	Name = "Auto Open Crate",
+	CurrentValue = false,
+	Flag = "Toggle17",
+	Callback = function(Value)
+	if Value == true then
+			repeat wait(getgenv().AutoCaseCooldown) AutoFarmCrate() until Rayfield.Flags["Toggle17"].CurrentValue == false
+		end
+	end,
+})
+
+
+local AutoOpenCrateDelay = AutoFarm:CreateInput({
+	Name = "Auto Open Crates Delay",
+	PlaceholderText = "ANY POSITIVE NUMBER ABOVE 0.01",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().AutoCaseCooldown = Text
+	end,
+})
+
+local ChangeCrate = AutoFarm:CreateInput({
+	Name = "Change Crate",
+	PlaceholderText = "Case Name. Example: Saber Case",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().CurrentCaseBuy = Text
+	end,
+})
+
+local ChangeCrateType = AutoFarm:CreateInput({
+	Name = "Change Crate Type",
+	PlaceholderText = "Knife / Revolver / Radio",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().CurrentCaseBuyType = Text
+	end,
+})
+
+local EventCratesOption = AutoFarm:CreateToggle({
+	Name = "Event Crates?",
+	CurrentValue = false,
+	Flag = "Toggle18",
+	Callback = function(Value)
+		if Value == true then
+			getgenv().EventCrates = true
+			else
+			getgenv().EventCrates = false
+		end
+	end,
+})
+
+local GemsCratesOption = AutoFarm:CreateToggle({
+	Name = "Gem Crates?",
+	CurrentValue = false,
+	Flag = "Toggle19",
+	Callback = function(Value)
+		if Value == true then
+			getgenv().GemCrates = true
+			else
+			getgenv().GemCrates = false
+		end
+	end,
+})
+
+local MultiCrates = AutoFarm:CreateSection("Mutli Crates")
+
+local MuiltiOpenCrates = AutoFarm:CreateToggle({
+	Name = "Multi Open Crates",
+	CurrentValue = false,
+	Flag = "Toggle20",
+	Callback = function(Value)
+	if Value == true then
+			repeat wait(getgenv().MultiCaseCooldown) MultiCrate() until Rayfield.Flags["Toggle20"].CurrentValue == false
+		end
+	end,
+})
+
+local MultiOpenCrateDelay = AutoFarm:CreateInput({
+	Name = "Multi Open Crates Delay",
+	PlaceholderText = "ANY POSITIVE NUMBER ABOVE 0.01",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().MultiCaseCooldown = Text
+	end,
+})
+
+local MultiChangeCrate1 = AutoFarm:CreateInput({
+	Name = "Multi Open Change Crate",
+	PlaceholderText = "Case Name. Example: Wood Case",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().Crate1 = Text
+	end,
+})
+
+local MultiChangeCrate2 = AutoFarm:CreateInput({
+	Name = "Multi Open Change Crate 2",
+	PlaceholderText = "Case Name. Example: Virtualized Case",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().Crate2 = Text
+	end,
+})
+
+local MultiChangeCrate3 = AutoFarm:CreateInput({
+	Name = "Multi Open Change Crate 3",
+	PlaceholderText = "Case Name. Example: Hellraiser Case",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().Crate3 = Text
+	end,
+})
+
+local MultiChangeCrate4 = AutoFarm:CreateInput({
+	Name = "Multi Open Change Crate 4",
+	PlaceholderText = "Case Name. Example: Elemental Case",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().Crate4 = Text
+	end,
+})
+
+local MultiEventCratesOption = AutoFarm:CreateToggle({
+	Name = "Event Crates?",
+	CurrentValue = false,
+	Flag = "Toggle21",
+	Callback = function(Value)
+		if Value == true then
+			getgenv().MultiEventCrates = true
+			else
+			getgenv().MultiEventCrates = false
+		end
+	end,
+})
+
+local MultiGemsCratesOption = AutoFarm:CreateToggle({
+	Name = "Gem Crates?",
+	CurrentValue = false,
+	Flag = "Toggle22",
+	Callback = function(Value)
+		if Value == true then
+			getgenv().MultiGemCrates = true
+			else
+			getgenv().MultiGemCrates = false
+		end
+	end,
+})
+
+local Coinss = AutoFarm:CreateSection("Coins")
+
+local AutoFarmCoin = AutoFarm:CreateToggle({
+   Name = "Auto Farm Coins",
+   CurrentValue = false,
+   Flag = "Toggle24",
+   Callback = function(Value)
+		if Rayfield.Flags["Toggle24"].CurrentValue == true then
+			getgenv().IsAutoFarmCoin = true
+		else
+		getgenv().IsAutoFarmCoin = false
+		end
+   end,
+})
+
+local AutoFarmCoinDelay = AutoFarm:CreateInput({
+	Name = "Auto Farm Coins Delay",
+	PlaceholderText = "ANY POSITIVE NUMBER ABOVE 0.3",
+	RemoveTextAfterFocusLost = false,
+	Callback = function(Text)
+		getgenv().AutoFarmCoinCooldown = Text
+	end,
+})
+
+local OtherFarms = AutoFarm:CreateSection("Misc Farms")
+
+local AutoFarmGems = AutoFarm:CreateToggle({
+   Name = "Auto Farm Chest (Gems)",
+   CurrentValue = false,
+   Flag = "Toggle25",
+   Callback = function(Value)
+		if Rayfield.Flags["Toggle25"].CurrentValue == true then
+			getgenv().IsAutoFarmChest = true
+		else
+		getgenv().IsAutoFarmChest = false
+		end
+   end,
+})
+
+local Teams = Gamee:CreateSection("Teams")
+
+local KillAll = Gamee:CreateButton({
+	Name = "🚧Kill All (Murderer)🚧",
+	Callback = function()
+
+	end,
+})
+
+local FindMurderer = Gamee:CreateButton({
+	Name = "🚧Find Murderer🚧",
+	Callback = function()
+		findmurderer()
+	end,
+})
+
+local FindSheriff = Gamee:CreateButton({
+	Name = "🚧Find Sheriff🚧",
+	Callback = function()
+		findsheriff()
+	end,
+})
+
+local Visuals = Gamee:CreateSection("Visuals")
+
+local ESP = Gamee:CreateToggle({
+	Name = "ESP",
+	CurrentValue = false,
+	Flag = "Toggle1",
+	Callback = function(Value)
+	pcall(function()
+		if Value == true then
+			for i,v in pairs(game.Players:GetChildren()) do
+
+				local Highlight = Instance.new("Highlight")
+				Highlight.Parent = v.Character
+				Highlight.FillColor = Color3.new(48,79,255)
+			end
+		else
+			for i,v in pairs(game.Players:GetChildren()) do
+				if v.Character["Highlight"] then
+					v.Character["Highlight"]:Destroy()
+				end
+			end
+		end
+		end)
+	end,
+})
+
+
+
+local Fullbright = Gamee:CreateToggle({
+	Name = "Fullbright (dark maps)",
+	CurrentValue = false,
+	Flag = "Toggle1",
+	Callback = function(Value)
+		if Value == true then
+			repeat wait(.5) fullbright() until Value == false
+		else
+		
+		end
+	end,
+})
+
+local Other = Gamee:CreateSection("Other")
+
+local RedeemCurrenntCodes = Gamee:CreateButton({
+	Name = "Redeem Current Codes (May '23)",
+	Callback = function()
+		game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("WINTER")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("EGG!9000")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!T3N!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("TURK3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("B4N4N4")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("LUCK3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("Y3P")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("N00B3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("PH4R40H")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("CHR0M4")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("W1Z4D!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("$!BL4Z3$!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("$!CR1MS0N!$")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!CHR0M4LIF3!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!D4G!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!DUCK!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!H0LID4Y!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!R3D!!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!SH4RK!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("!T3N!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("3DG3D")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("3MP")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("BAGUETTE")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("B0X")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("C01L")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("CH13F")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("CHROMA4U")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("CHR0M4")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("D34TH")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("D4RK!ED")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("DR4G0N5")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("EDW4RD")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("FR33C0D3")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("FR33!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("G4L4XY!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("GH05T")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("H0L1D4Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("H1DD3N")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("H3LH4MM2R3D")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("IMASBN37")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("INF3RN10")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("INF3RN4L")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("JR")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("LOLPOP")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("LUCK3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("LUG3R")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("M1DN1GHT")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("N00B3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("NU47H7")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("OM837B")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("P0T4T0")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("P1ZZ4!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("PDJ")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("PH4R40H")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("PR1S0N3D")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("R3TURN")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("R41N")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("S0RR0W")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("S1L")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("S3N")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("SK00L")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("SL1C3R0")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("T1NY")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("TH0R")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("TH4NK5!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("TURK3Y")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("UEY743")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("UPD4T3")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("V4L3N")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("V4P0R")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("Y3P!")
+game:GetService("ReplicatedStorage").Interactions.Server.RedeemCode:InvokeServer("WINTER")
+	end,
+})
+
+local AntiAfk = Gamee:CreateToggle({
+	Name = "AFK Farm (Free XP and Survivor Badges)",
+	CurrentValue = false,
+	Flag = "Toggle854",
+	Callback = function(Value)
+		if Value == true then
+				repeat wait(1) antiafk() until Rayfield.Flags["Toggle854"].CurrentValue == false
+			else
+			
+		end
+	end,
+})
+
+local AntiAfkUd = Gamee:CreateButton({
+	Name = "Anti Afk (Undetectable)",
+	Callback = function()
+			wait(0.5)local ba=Instance.new("ScreenGui")
+	local ca=Instance.new("TextLabel")local da=Instance.new("Frame")
+	local _b=Instance.new("TextLabel")local ab=Instance.new("TextLabel")ba.Parent=game.CoreGui
+	ba.ZIndexBehavior=Enum.ZIndexBehavior.Sibling;ca.Parent=ba;ca.Active=true
+	ca.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ca.Draggable=true
+	ca.Position=UDim2.new(0.698610067,0,0.098096624,0)ca.Size=UDim2.new(0,370,0,52)
+	ca.Font=Enum.Font.SourceSansSemibold;ca.Text="Anti AFK Script"ca.TextColor3=Color3.new(0,1,1)
+	ca.TextSize=22;da.Parent=ca
+	da.BackgroundColor3=Color3.new(0.196078,0.196078,0.196078)da.Position=UDim2.new(0,0,1.0192306,0)
+	da.Size=UDim2.new(0,370,0,107)_b.Parent=da
+	_b.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)_b.Position=UDim2.new(0,0,0.800455689,0)
+	_b.Size=UDim2.new(0,370,0,21)_b.Font=Enum.Font.Arial;_b.Text="made by ur mom "
+		_b.TextColor3=Color3.new(0,1,1)_b.TextSize=20;ab.Parent=da
+	ab.BackgroundColor3=Color3.new(0.176471,0.176471,0.176471)ab.Position=UDim2.new(0,0,0.158377,0)
+	ab.Size=UDim2.new(0,370,0,44)ab.Font=Enum.Font.ArialBold;ab.Text="Status: Active"
+		ab.TextColor3=Color3.new(0,1,1)ab.TextSize=20;local bb=game:service'VirtualUser'
+	game:service'Players'.LocalPlayer.Idled:connect(function()
+	bb:CaptureController()bb:ClickButton2(Vector2.new())
+	ab.Text="Roblox tried to kick u but i kicked him instead"wait(2)ab.Text="Status : Active"end)
+	end,
+})
+
+local Print = Debugging:CreateDropdown({
+	Name = "Print Something",
+	Options = {"Print IsAutoBuying","Print CurrentCaseBuy","Print CurrentCaseBuyType","Print CaseBuyCooldown","Print Crates Opened"},
+	CurrentOption = "Default",
+	Flag = "Dropdown1",
+	Callback = function(Option)
+		if Option == "Print IsAutoBuying" then
+			print(getgenv().IsAutoBuying)
+		elseif Option == "Print CurrentCaseBuy" then
+			print(getgenv().CurrentCaseBuy)
+		elseif Option == "Print CurrentCaseBuyType" then
+			print(getgenv().CurrentCaseBuyType)
+		elseif Option == "Print CaseBuyCooldown" then
+			print(getgenv().AutoCaseCooldown)
+		elseif Option == "Print Crates Opened" then
+			print(getgenv().CratesOpened)
+		elseif Option == "Default" then
+
+		else
+
+		end
+	end,
+})
+
+local CallFunction = Debugging:CreateDropdown({
+	Name = "Call a Function",
+	Options = {"SaveSettings","PanicDestroy"},
+	CurrentOption = "Default",
+	Flag = "Dropdown1",
+	Callback = function(Option)
+		if Option == "SaveSettings" then
+			SaveSettings()
+		elseif Option == "PanicDestroy" then
+			PanicDestroy()
+		elseif Option == "Default" then
+
+		else
+
+		end
+	end,
+})
+
+local Panic = Settings:CreateButton({
+	Name = "Panic/Destroy UI",
+	Callback = function()
+		PanicDestroy()
+	end,
+})
+
